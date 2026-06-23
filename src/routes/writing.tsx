@@ -157,11 +157,20 @@ function WritingPage() {
           )}
 
           {/* Prompt card */}
-          <div className="card-academic p-6">
+          <div className="card-academic p-6 space-y-4">
             <div className="text-xs uppercase tracking-wider text-gold">{task.part}</div>
-            <p className="mt-3 text-base leading-relaxed">{task.prompt}</p>
+            {task.imageUrl && (
+              <div className="overflow-hidden rounded-lg border border-border bg-muted/30 p-2 flex justify-center">
+                <img
+                  src={task.imageUrl}
+                  alt="Task Diagram"
+                  className="max-h-[300px] object-contain rounded transition-transform hover:scale-105 duration-300"
+                />
+              </div>
+            )}
+            <p className="text-base leading-relaxed">{task.prompt}</p>
             {lang === "ru" && (
-              <p className="mt-3 text-sm text-muted-foreground border-t border-border pt-3">
+              <p className="text-sm text-muted-foreground border-t border-border pt-3">
                 {task.promptRu}
               </p>
             )}

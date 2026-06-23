@@ -198,3 +198,53 @@ Return STRICT JSON only:
     }));
     return parsed;
   });
+
+// ===== Writing AI generation =====
+
+const WritingGenInput = z.object({
+  topic: z.string().min(2).max(120),
+  uiLang: z.enum(["ru", "en"]).default("en"),
+});
+
+export interface GeneratedWritingPrompt {
+  prompt: string;
+  promptRu: string;
+  part: "Task 2";
+  minWords: number;
+}
+
+export const generateWritingPrompt = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => WritingGenInput.parse(data))
+  .handler(async ({ data }): Promise<GeneratedWritingPrompt> => {
+    const langLabel = data.uiLang === "ru" ? "Russian" : "English";
+
+    const system = `You are an IELTS exam materials author. Generate an authentic IELTS Task 2 writing prompt about the given topic.
+For Task 2, write an essay prompt in the format used in real IELTS exams (e.g., 'To what extent do you agree or disagree?', 'Discuss both views and give your opinion', etc.).
+Return STRICT JSON only:
+{
+  "prompt": string,
+  "promptRu": string
+}
+- "prompt": The IELTS writing prompt in ENGLISH, exactly as it would appear on the exam paper.
+- "promptRu": The same prompt translated to ${langLabel}.
+- Make it realistic and challenging but fair.`;
+
+    const raw = await chatCompletion({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: `Topic: ${data.topic}` },
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.7,
+    });
+
+    const parsed = extractJson<{ prompt: string; promptRu: string }>(raw);
+
+    return {
+      prompt: parsed.prompt,
+      promptRu: parsed.promptRu,
+      part: "Task 2",
+      minWords: 250,
+    };
+  });

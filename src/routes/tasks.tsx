@@ -31,20 +31,33 @@ function TasksPage() {
         </div>
         <div className="grid md:grid-cols-2 gap-4">
           {writingTasks.map((tk) => (
-            <article key={tk.id} className="card-academic p-5">
-              <div className="text-xs uppercase tracking-wider text-gold">{tk.part}</div>
-              <p className="mt-2 text-sm leading-relaxed">{tk.prompt}</p>
-              {lang === "ru" && (
-                <p className="mt-2 text-xs text-muted-foreground border-t border-border pt-2">
-                  {tk.promptRu}
-                </p>
-              )}
-              <Link
-                to="/writing"
-                className="mt-4 inline-flex items-center gap-1 text-sm text-primary hover:underline"
-              >
-                {t.practiceWriting} →
-              </Link>
+            <article key={tk.id} className="card-academic p-5 flex flex-col justify-between">
+              <div>
+                <div className="text-xs uppercase tracking-wider text-gold">{tk.part}</div>
+                {tk.imageUrl && (
+                  <div className="my-3 overflow-hidden rounded border border-border bg-muted/10 p-1 flex justify-center max-h-[160px]">
+                    <img
+                      src={tk.imageUrl}
+                      alt="Task Diagram"
+                      className="max-h-[150px] object-contain rounded"
+                    />
+                  </div>
+                )}
+                <p className="mt-2 text-sm leading-relaxed">{tk.prompt}</p>
+                {lang === "ru" && (
+                  <p className="mt-2 text-xs text-muted-foreground border-t border-border pt-2">
+                    {tk.promptRu}
+                  </p>
+                )}
+              </div>
+              <div className="mt-4">
+                <Link
+                  to="/writing"
+                  className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                >
+                  {t.practiceWriting} →
+                </Link>
+              </div>
             </article>
           ))}
         </div>

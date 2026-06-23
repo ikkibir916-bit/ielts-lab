@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WritingAiRouteImport } from './routes/writing-ai'
 import { Route as WritingRouteImport } from './routes/writing'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as SpeakingRouteImport } from './routes/speaking'
@@ -17,6 +18,11 @@ import { Route as ReadingRouteImport } from './routes/reading'
 import { Route as ListeningRouteImport } from './routes/listening'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WritingAiRoute = WritingAiRouteImport.update({
+  id: '/writing-ai',
+  path: '/writing-ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WritingRoute = WritingRouteImport.update({
   id: '/writing',
   path: '/writing',
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/speaking': typeof SpeakingRoute
   '/tasks': typeof TasksRoute
   '/writing': typeof WritingRoute
+  '/writing-ai': typeof WritingAiRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/speaking': typeof SpeakingRoute
   '/tasks': typeof TasksRoute
   '/writing': typeof WritingRoute
+  '/writing-ai': typeof WritingAiRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/speaking': typeof SpeakingRoute
   '/tasks': typeof TasksRoute
   '/writing': typeof WritingRoute
+  '/writing-ai': typeof WritingAiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/speaking'
     | '/tasks'
     | '/writing'
+    | '/writing-ai'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/speaking'
     | '/tasks'
     | '/writing'
+    | '/writing-ai'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/speaking'
     | '/tasks'
     | '/writing'
+    | '/writing-ai'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,10 +131,18 @@ export interface RootRouteChildren {
   SpeakingRoute: typeof SpeakingRoute
   TasksRoute: typeof TasksRoute
   WritingRoute: typeof WritingRoute
+  WritingAiRoute: typeof WritingAiRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/writing-ai': {
+      id: '/writing-ai'
+      path: '/writing-ai'
+      fullPath: '/writing-ai'
+      preLoaderRoute: typeof WritingAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/writing': {
       id: '/writing'
       path: '/writing'
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   SpeakingRoute: SpeakingRoute,
   TasksRoute: TasksRoute,
   WritingRoute: WritingRoute,
+  WritingAiRoute: WritingAiRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
